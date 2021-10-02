@@ -1,6 +1,4 @@
-# webassembly实现目标检测
-
-
+# 浏览器端实现目标检测推理(基于wasm)
 
 ![](https://moonstarimg.oss-cn-hangzhou.aliyuncs.com/picgo_img/det.gif)
 
@@ -10,7 +8,7 @@
 
 https://det.vansin.top/
 
-## 环境准备
+## 复现步骤
 
 ### 1. 安装emscripten工具链
 
@@ -24,6 +22,8 @@ cd emsdk
 
 source emsdk/emsdk_env.sh
 ```
+
+注意以下所有的操作都需要先 source emsdk/emsdk_env.sh
 
 ### 2. 编译测试ncnn
 
@@ -57,11 +57,53 @@ make install
 
 ![](https://moonstarimg.oss-cn-hangzhou.aliyuncs.com/picgo_img/20211002154326.png)
 
-### 3. 编译nanodet
+### 3. 编译ncnn-webassembly-nanodet
 
 
 
+```shell
+git clone https://github.com/vansin/ncnn-webassembly-nanodet
+cd ncnn-webassembly-nanodet
+```
 
+把编译好的ncnn的install复制到ncnn-webassembly-nanodet目录下
+
+![](https://moonstarimg.oss-cn-hangzhou.aliyuncs.com/picgo_img/20211002155458.png)
+
+```shell
+mkdir build
+cd build
+
+cmake -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -DWASM_FEATURE=basic ..
+
+make -j
+```
+
+
+
+![](https://moonstarimg.oss-cn-hangzhou.aliyuncs.com/picgo_img/20211002155815.png)
+
+
+
+把index.html和wasmFeatureDetect.js复制到build中
+
+```shell
+cp ../index.html index.html
+cp ../wasmFeatureDetect.js wasmFeatureDetect.js
+```
+
+
+
+全局安装http-server，并启动
+
+```shell
+npm install -g http-server
+http-server .
+```
+
+![](https://moonstarimg.oss-cn-hangzhou.aliyuncs.com/picgo_img/20211002160130.png)
+
+![](https://moonstarimg.oss-cn-hangzhou.aliyuncs.com/picgo_img/20211002160159.png)
 
 ## 参考
 
